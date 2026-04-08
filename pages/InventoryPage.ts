@@ -16,7 +16,13 @@ export class InventoryPage extends BasePage {
     }
 
     // Methods
-    addToCart(productName: string) {
-        this.productsList.filter({ hasText: productName })
+    async addToCart(productName: string) {
+        await this.productsList.filter({ hasText: productName })
+            .getByRole('button', { name: 'Add to cart' })
+            .click();
+    }
+
+    async getCartCount() {
+        return await this.shoppingCartLink.textContent();
     }
 }
