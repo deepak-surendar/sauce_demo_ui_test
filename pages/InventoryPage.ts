@@ -58,4 +58,8 @@ export class InventoryPage extends BasePage {
     async selectSortByDropdown(label: string) {
         return this.sortSelect.selectOption({ label: label });
     }
+
+    async clickProductName(productName: string) {
+        await this.getProductNameLocator(productName).click();
+    }
 }

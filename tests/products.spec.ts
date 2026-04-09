@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { InventoryPage } from '../pages/InventoryPage';
 import * as testData from './data/testData.json';
 import * as utils from './utils/utils';
+import { ProductDetailsPage } from '../pages/ProductDetailsPage';
 
 interface Product {
   name: string;
@@ -64,21 +65,20 @@ testData.sortBy.forEach((sortByValue: string, index: number) => {
 
     // check sort order - descending by name
     switch (index) {
+      case 1:
+        utils.sortByKey(productsData, 'name', 'desc');
+        break;
       case 2:
-        utils.sortByKey(productsData, 'name', 'asc');
+        utils.sortByKey(productsData, 'price', 'asc');
         break;
       case 3:
         utils.sortByKey(productsData, 'price', 'desc');
         break;
-      case 4:
-        utils.sortByKey(productsData, 'price', 'desc');
-        break;
-      case 1:
+      case 0:
       default:
         utils.sortByKey(productsData, 'name', 'asc');
         break;
     }
-    // utils.sortByKey(productsData, key, sortOrder);
     await expect(inventoryPage.productsList)
       .toContainText([productsData[0].name,
       productsData[1].name,
@@ -89,21 +89,20 @@ testData.sortBy.forEach((sortByValue: string, index: number) => {
   });
 });
 
-
-test('Can sort products - high to low price', async ({ page }) => {
+test('Product details view display', async ({ page }) => {
   const inventoryPage = new InventoryPage(page);
-  const productsData: Product[] = testData.products;
+  const productDetailsPage = new ProductDetailsPage(page);
 
   await inventoryPage.navigateTo('/inventory.html');
-  await inventoryPage.selectSortByDropdown(testData.sortBy[3]);
 
-  // check sort order - high to low price
-  utils.sortByKey(productsData, 'price', 'desc');
-  await expect(inventoryPage.productsList)
-    .toContainText([productsData[0].name,
-    productsData[1].name,
-    productsData[2].name,
-    productsData[3].name,
-    productsData[4].name,
-    productsData[5].name]);
+  for (const product of testData.products) {
+    await inventoryPage.clickProductName(product.name);
+    await expect(page).toHaveURL(/inventory-item\.html/);
+
+    await expect(productDetailsPage.productName).toHaveText(product.name);
+    await expect(productDetailsPage.productDescription).toHaveText(product.description);
+    await expect(productDetailsPage.productPrice).toHaveText(`\$${product.price}`);
+
+    await productDetailsPage.clickBackToProductsButton();
+  }
 });
