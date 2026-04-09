@@ -15,14 +15,47 @@ export class InventoryPage extends BasePage {
         return this.page.locator('[data-test="inventory-item"]');
     }
 
+    get sortSelect(): Locator {
+        return this.page.locator('[data-test="product-sort-container"]');
+    }
+
     // Methods
     async addToCart(productName: string) {
-        await this.productsList.filter({ hasText: productName })
+        await this.productsList
+            .filter({ hasText: productName })
             .getByRole('button', { name: 'Add to cart' })
             .click();
     }
 
     async getCartCount() {
         return await this.shoppingCartLink.textContent();
+    }
+
+    getProductNameLocator(productName: string): Locator {
+        return this.productsList
+            .filter({ hasText: productName })
+            .locator('[data-test="inventory-item-name"]');
+    }
+
+    getProductDescLocator(productName: string): Locator {
+        return this.productsList
+            .filter({ hasText: productName })
+            .locator('[data-test="inventory-item-desc"]');
+    }
+
+    getProductPriceLocator(productName: string): Locator {
+        return this.productsList
+            .filter({ hasText: productName })
+            .locator('[data-test="inventory-item-price"]');
+    }
+
+    getProductImageLocator(productName: string): Locator {
+        return this.productsList
+            .filter({ hasText: productName })
+            .getByAltText(productName);
+    }
+
+    async selectSortByDropdown(label: string) {
+        return this.sortSelect.selectOption({ label: label });
     }
 }
