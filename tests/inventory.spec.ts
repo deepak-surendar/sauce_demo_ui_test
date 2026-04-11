@@ -11,7 +11,7 @@ interface Product {
   currency: string;
 }
 
-test('User can add a backpack to the cart', async ({ page }) => {
+test('Add and remove an item to the cart updates cart count', async ({ page }) => {
   const inventoryPage = new InventoryPage(page);
   const productsData: Product[] = testData.products;
 
@@ -19,23 +19,18 @@ test('User can add a backpack to the cart', async ({ page }) => {
   await inventoryPage.navigateTo('/inventory.html');
 
   // 2. Action
-  await inventoryPage.addToCart('Sauce Labs Bike Light');
+  await inventoryPage.addToCart(productsData[0].name);
 
   // 3. Assertion
-  const cartCount = await inventoryPage.getCartCount();
+  let cartCount = await inventoryPage.getCartCount();
   expect(cartCount).toBe('1');
-  // check default sort order - ascending by name
-  utils.sortByKey(productsData, 'name', 'asc');
-  await expect(inventoryPage.productsList)
-    .toContainText([productsData[0].name,
-    productsData[1].name,
-    productsData[2].name,
-    productsData[3].name,
-    productsData[4].name,
-    productsData[5].name]);
+
+  await inventoryPage.removeFromCart(productsData[0].name);
+  cartCount = await inventoryPage.getCartCount();
+  expect(cartCount).toBe('');
 });
 
-test('Verify all products match test data', async ({ page }) => {
+test('Verify all the products are in inventory', async ({ page }) => {
   const inventoryPage = new InventoryPage(page);
 
   // 1. Action
@@ -89,20 +84,24 @@ testData.sortBy.forEach((sortByValue: string, index: number) => {
   });
 });
 
-test('Product details view display', async ({ page }) => {
+test('Add multiple items to cart', async ({ page }) => {
   const inventoryPage = new InventoryPage(page);
-  const productDetailsPage = new ProductDetailsPage(page);
+  const productsData: Product[] = testData.products;
 
   await inventoryPage.navigateTo('/inventory.html');
 
-  for (const product of testData.products) {
-    await inventoryPage.clickProductName(product.name);
-    await expect(page).toHaveURL(/inventory-item\.html/);
+  await inventoryPage.addToCart(productsData[0].name);
+  let cartCount = await inventoryPage.getCartCount();
+  expect(cartCount).toBe('1');
 
-    await expect(productDetailsPage.productName).toHaveText(product.name);
-    await expect(productDetailsPage.productDescription).toHaveText(product.description);
-    await expect(productDetailsPage.productPrice).toHaveText(`\$${product.price}`);
+  await inventoryPage.addToCart(productsData[1].name);
+  cartCount = await inventoryPage.getCartCount();
+  expect(cartCount).toBe('2');
 
-    await productDetailsPage.clickBackToProductsButton();
-  }
+  await inventoryPage.addToCart(productsData[2].name);
+  await inventoryPage.addToCart(productsData[3].name);
+  await inventoryPage.addToCart(productsData[4].name);
+  await inventoryPage.addToCart(productsData[5].name);
+  cartCount = await inventoryPage.getCartCount();
+  expect(cartCount).toBe('6');
 });

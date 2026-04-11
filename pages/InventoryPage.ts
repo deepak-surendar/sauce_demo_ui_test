@@ -27,6 +27,13 @@ export class InventoryPage extends BasePage {
             .click();
     }
 
+    async removeFromCart(productName: string) {
+        await this.productsList
+            .filter({ hasText: productName })
+            .getByRole('button', { name: 'Remove' })
+            .click();
+    }
+
     async getCartCount() {
         return await this.shoppingCartLink.textContent();
     }
@@ -61,5 +68,9 @@ export class InventoryPage extends BasePage {
 
     async clickProductName(productName: string) {
         await this.getProductNameLocator(productName).click();
+    }
+
+    async clickProductImage(productName: string) {
+        await this.getProductImageLocator(productName).click();
     }
 }

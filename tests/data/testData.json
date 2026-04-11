@@ -7,6 +7,10 @@
     "locked": {
       "username": "locked_out_user",
       "password": "secret_sauce"
+    },
+    "invalid": {
+      "username": "test",
+      "password":  "test"
     }
   },
   "products": [

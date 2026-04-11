@@ -17,10 +17,23 @@ export class BasePage {
     }
 
     get menuButton(): Locator {
-        return this.page.locator('#react-burger-menu-btn');
+        return this.page.getByRole('button', { name: 'Open Menu' });
     }
 
+    get logoutButton(): Locator {
+        return this.page.getByRole('link', { name: 'Logout' });
+    }
+
+    // Methods
     async navigateTo(path: string) {
         await this.page.goto(path);
+    }
+
+    async clickMenuButton() {
+        await this.menuButton.click();
+    }
+
+    async clickLogoutButton() {
+        await this.logoutButton.click();
     }
 }
