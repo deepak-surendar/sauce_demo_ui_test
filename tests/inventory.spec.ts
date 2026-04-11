@@ -11,7 +11,7 @@ interface Product {
   currency: string;
 }
 
-test('Add and remove an item to the cart updates cart count', async ({ page }) => {
+test('Add and remove an item to the cart from inventory updates badge count', async ({ page }) => {
   const inventoryPage = new InventoryPage(page);
   const productsData: Product[] = testData.products;
 
@@ -84,7 +84,7 @@ testData.sortBy.forEach((sortByValue: string, index: number) => {
   });
 });
 
-test('Add multiple items to cart', async ({ page }) => {
+test('Add multiple items to cart from inventory', async ({ page }) => {
   const inventoryPage = new InventoryPage(page);
   const productsData: Product[] = testData.products;
 
