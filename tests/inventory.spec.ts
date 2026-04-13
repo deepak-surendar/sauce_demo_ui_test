@@ -22,11 +22,11 @@ test('Add and remove an item to the cart from inventory updates badge count', as
   await inventoryPage.addToCart(productsData[0].name);
 
   // 3. Assertion
-  let cartCount = await inventoryPage.getCartCount();
+  let cartCount = await inventoryPage.getCartBadgeCount();
   expect(cartCount).toBe('1');
 
   await inventoryPage.removeFromCart(productsData[0].name);
-  cartCount = await inventoryPage.getCartCount();
+  cartCount = await inventoryPage.getCartBadgeCount();
   expect(cartCount).toBe('');
 });
 
@@ -91,17 +91,17 @@ test('Add multiple items to cart from inventory', async ({ page }) => {
   await inventoryPage.navigateTo('/inventory.html');
 
   await inventoryPage.addToCart(productsData[0].name);
-  let cartCount = await inventoryPage.getCartCount();
+  let cartCount = await inventoryPage.getCartBadgeCount();
   expect(cartCount).toBe('1');
 
   await inventoryPage.addToCart(productsData[1].name);
-  cartCount = await inventoryPage.getCartCount();
+  cartCount = await inventoryPage.getCartBadgeCount();
   expect(cartCount).toBe('2');
 
   await inventoryPage.addToCart(productsData[2].name);
   await inventoryPage.addToCart(productsData[3].name);
   await inventoryPage.addToCart(productsData[4].name);
   await inventoryPage.addToCart(productsData[5].name);
-  cartCount = await inventoryPage.getCartCount();
+  cartCount = await inventoryPage.getCartBadgeCount();
   expect(cartCount).toBe('6');
 });

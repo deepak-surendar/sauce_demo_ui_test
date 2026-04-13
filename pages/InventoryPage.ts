@@ -34,7 +34,7 @@ export class InventoryPage extends BasePage {
             .click();
     }
 
-    async getCartCount() {
+    async getCartBadgeCount() {
         return await this.shoppingCartLink.textContent();
     }
 
